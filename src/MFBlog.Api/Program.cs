@@ -1,5 +1,8 @@
+using MFBlog.Api;
 using MFBlog.Core.Domain.Identity;
+using MFBlog.Core.SeedWorks;
 using MFBlog.Data;
+using MFBlog.Data.SeedWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +42,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
+// Add services to the container.
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 
 //Default config for ASP.NET Core
@@ -61,5 +68,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//Seeding data
+app.MigrateDatabase();
 
 app.Run();
